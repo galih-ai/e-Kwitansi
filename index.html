@@ -354,31 +354,52 @@
         </div>
     </div>
 <script>
-const users = [
-    { u: 'Bendahara1_Andalan', p: 'Nuba_1' },
-    { u: 'Bendahara2_Andalan', p: 'Alifia_2' }
-];
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhwWPq5swV5FsZ7EhjK_h8rCVD0svMoAhoCeOdIIItRMys3CkTVbb51CIFsKkYhj5jVw/exec";
 
-function login() {
+async function login() {
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
     const error = document.getElementById('loginError');
+    const loginBtn = document.querySelector('button[onclick="login()"]');
 
-    const valid = users.some(x => x.u === user && x.p === pass);
+    // Beri indikasi loading
+    loginBtn.innerText = "Mengecek...";
+    loginBtn.disabled = true;
 
-    if (valid) {
-        document.getElementById('landingPage').classList.add('hidden');
-        document.getElementById('appPage').classList.remove('hidden');
-        error.classList.add('hidden');
-    } else {
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain', 
+            },
+            body: JSON.stringify({ username: user, password: pass }),
+            redirect: 'follow'
+        });
+
+        const data = await response.json();
+
+        if (data.result === 'success') {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('appPage').classList.remove('hidden');
+            error.classList.add('hidden');
+        } else {
+            error.innerText = "Username atau password salah";
+            error.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error(err);
+        error.innerText = "Terjadi kesalahan koneksi. Pastikan Deployment Apps Script sudah benar.";
         error.classList.remove('hidden');
+    } finally {
+        loginBtn.innerText = "Masuk Aplikasi";
+        loginBtn.disabled = false;
     }
 }
 
 function logout() {
     document.getElementById('appPage').classList.add('hidden');
     document.getElementById('landingPage').classList.remove('hidden');
-
+    // reset form
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
 }
