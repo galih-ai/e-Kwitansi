@@ -166,14 +166,28 @@
             <!-- Menu Penginputan (Input Form) -->
             <div id="input-form" class="bg-white p-6 rounded-xl shadow-lg no-print w-full lg:w-2/3 xl:w-1/2 mx-auto">
                 <h2 class="text-xl font-semibold mb-4 text-gray-700 border-b pb-2">Form Pengisian</h2>
-
+<div class="mt-2">
+    <a href="https://docs.google.com/spreadsheets/d/12zd4UeaCW8K_wXGvr3M_3jwgIk_c8ixWRN3iycbhe44/edit?gid=0#gid=0" 
+       target="_blank" 
+       class="text-blue-600 hover:text-blue-800 text-base font-bold underline flex items-center gap-1">
+       <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+       </svg>
+       CEK LANJUTAN NOMOR KWITANSI
+    </a>
+</div>
                 <div class="space-y-4">
                     <!-- 1. Nomor Kwitansi -->
-                    <div>
-                        <label for="receiptNumber" class="block text-sm font-medium text-gray-700">1. Nomor Kwitansi</label>
-                        <input type="number" id="receiptNumber" value="1" min="1" oninput="updateReceipt()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                        <p class="mt-1 text-xs text-gray-500">Gunakan tombol panah di samping untuk menambah/mengurangi nomor.</p>
-                    </div>
+<div>
+    <label for="receiptNumber" class="block text-sm font-medium text-gray-700">1. Nomor Kwitansi</label>
+    <input type="number" 
+           id="receiptNumber" 
+           placeholder="Masukkan nomor..." 
+           min="1" 
+           oninput="updateReceipt()" 
+           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
+    <p class="mt-1 text-xs text-gray-500">Gunakan tombol panah di samping untuk menambah/mengurangi nomor.</p>
+</div>
 
                     <!-- 2. Telah diterima dari (Dropdown Sekolah) -->
                     <div>
@@ -232,12 +246,15 @@
                     </div>
 
                     <!-- 3. Uang Sejumlah (Nominal) -->
-                    <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700">3. Uang Sejumlah (Nominal Angka)</label>
-                        <input type="number" id="amount" oninput="updateAmount()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                        <p id="amountPreview" class="mt-1 text-sm text-gray-500">Format: Rp 0,00-</p>
-                    </div>
-
+<div>
+    <label for="amount" class="block text-sm font-medium text-gray-700">3. Uang Sejumlah (Nominal Angka)</label>
+    <input type="number" 
+           id="amount" 
+           placeholder="Masukkan nominal..." 
+           oninput="updateAmount()" 
+           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
+    <p id="amountPreview" class="mt-1 text-sm text-gray-500">Format: Rp 0,00-</p>
+</div>
                     <!-- 4. Untuk Pembayaran -->
                     <div>
                         <label for="paymentType" class="block text-sm font-medium text-gray-700">4. Untuk Pembayaran</label>
@@ -320,13 +337,13 @@
 
                     <!-- 6. Tanggal Pembayaran -->
                     <div>
-                        <label for="paymentDate" class="block text-sm font-medium text-gray-700">6. Tanggal Pembayaran</label>
+                        <label for="paymentDate" class="block text-sm font-medium text-gray-700">5. Tanggal Pembayaran</label>
                         <input type="date" id="paymentDate" oninput="updateReceipt()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border bg-white">
                     </div>
 
                     <!-- 7. Nama Bendahara -->
                     <div>
-                        <label for="treasurerName" class="block text-sm font-medium text-gray-700">7. Nama Bendahara</label>
+                        <label for="treasurerName" class="block text-sm font-medium text-gray-700">6. Nama Bendahara</label>
                         <select id="treasurerName" onchange="updateReceipt()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border bg-white">
                             <option value="" disabled selected>Pilih Bendahara</option>
                             <option value="NURUL BADRIYAH, S.Psi.">NURUL BADRIYAH, S.Psi.</option>
@@ -339,7 +356,19 @@
                         <button onclick="downloadPDF()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 shadow-md">
                             Unduh PDF Kwitansi
                         </button>
-                    </div>
+                        <button onclick="saveToDrive()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+    Save to Drive MGBK
+</button>
+
+<a href="https://drive.google.com/drive/folders/1I2dy3xlK6-PcI0cn8LPCrjeV_7_26cIu" 
+   target="_blank" 
+   class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 text-sm border border-yellow-600">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+    </svg>
+    CEK FOLDER KWITANSI
+</a>
+                   </div>
                 </div>
             </div>
 
@@ -354,7 +383,6 @@
         </div>
     </div>
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhwWPq5swV5FsZ7EhjK_h8rCVD0svMoAhoCeOdIIItRMys3CkTVbb51CIFsKkYhj5jVw/exec";
 
 async function login() {
     const user = document.getElementById('username').value;
@@ -406,6 +434,10 @@ function logout() {
 </script>
 
     <script type="text/javascript">
+    /* ================= KONSTANTA GLOBAL ================= */
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhwWPq5swV5FsZ7EhjK_h8rCVD0svMoAhoCeOdIIItRMys3CkTVbb51CIFsKkYhj5jVw/exec";
+    const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbx_5KSvkk9JNp7gLiuIDGpj794Gd7S95927UTE5uOqwVZYLECbPYCcYToaV8FXhcm5L/exec"    
+   
         // Global variable for jspdf window
         const { jsPDF } = window.jspdf;
         
@@ -753,7 +785,111 @@ else if (treasurerName === 'SITI HATIRAH, S.Pd.') {
         document.addEventListener('DOMContentLoaded', () => {
             updateReceipt();
             handlePaymentTypeChange();
-        });
+        })
+
+        async function saveToDrive() {
+    const receipt = document.getElementById('receipt-preview');
+
+    if (!receipt || receipt.innerHTML.trim() === '') {
+        alert('Preview kwitansi belum siap');
+        return;
+    }
+
+    const no = String(
+        parseInt(document.getElementById('receiptNumber').value || 1)
+    ).padStart(4, '0');
+
+    const sekolah = document.getElementById('receivedFrom').value || 'Draft';
+
+    const paymentType = document.getElementById('paymentType').value;
+    const manualText = document.getElementById('manualPaymentText').value;
+
+    let prefix = 'Kwitansi';
+
+    if (paymentType === 'Iuran MGBK SMP') {
+        prefix = 'Kwitansi_Iuran MGBK';
+    } else if (paymentType === 'Pembayaran Dana Konsumsi Pertemuan MGBK') {
+        prefix = 'Kwitansi_Pembayaran Dana Konsumsi Pertemuan MGBK';
+    } else if (paymentType === 'Lainnya' && manualText.trim() !== '') {
+        prefix = `Kwitansi_${manualText.trim()}`;
+    }
+
+    const filename = `${prefix}_No ${no}_${sekolah}.pdf`;
+
+    const canvas = await html2canvas(receipt, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff"
+    });
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/png');
+
+    pdf.addImage(
+        imgData,
+        'PNG',
+        15,
+        15,
+        180,
+        canvas.height * 180 / canvas.width
+    );
+
+    const pdfBlob = pdf.output('blob');
+const reader = new FileReader();
+    reader.readAsDataURL(pdfBlob);
+reader.onloadend = async function() {
+        const base64data = reader.result.split(',')[1];
+
+        // 1. Definisikan pemformatan data terlebih dahulu
+        const noRaw = parseInt(document.getElementById('receiptNumber').value || 1);
+        const noFormatted = String(noRaw).padStart(4, '0'); // Mengubah 1 menjadi 0001 
+
+        const amountRaw = parseInt(document.getElementById('amount').value, 10) || 0;
+        const amountFormatted = formatRupiah(amountRaw); // Mengubah 100000 menjadi Rp 100.000,00- 
+
+        // 2. Masukkan variabel yang sudah diformat ke dalam payload
+        const payload = {
+            action: 'uploadDrive',
+            filename: filename,
+            mimeType: "application/pdf",
+            data: base64data,
+            noKwitansi: noFormatted,      // Menggunakan hasil format 0001
+            sekolah: document.getElementById('receivedFrom').value,
+            nominal: amountFormatted,     // Menggunakan hasil format Rp...
+            untuk: document.getElementById('paymentType').value === 'Lainnya' ? 
+                   document.getElementById('manualPaymentText').value : 
+                   document.getElementById('paymentType').value,
+            tglBayar: formatDate(document.getElementById('paymentDate').value), // Menggunakan format tanggal Indonesia
+            bendahara: document.getElementById('treasurerName').value
+        };
+
+        try {
+            const btn = document.querySelector('button[onclick="saveToDrive()"]');
+            const originalText = btn.innerText;
+            btn.innerText = "Sedang Menyimpan...";
+            btn.disabled = true;
+
+            await fetch(UPLOAD_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            alert('✅ Kwitansi berhasil disimpan ke Drive & Rekap tercatat di Sheets');
+            
+            btn.innerText = originalText;
+            btn.disabled = false;
+
+        } catch (err) {
+            console.error(err);
+            alert('❌ Gagal menyimpan. Periksa koneksi atau UPLOAD_URL.');
+            const btn = document.querySelector('button[onclick="saveToDrive()"]');
+            btn.innerText = "Save to Drive";
+            btn.disabled = false;
+        }
+    };
+    // --- SAMPAI SINI ---
+}
+
     </script>
 </body>
 </html>
