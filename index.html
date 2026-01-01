@@ -186,7 +186,7 @@
            min="1" 
            oninput="updateReceipt()" 
            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-    <p class="mt-1 text-xs text-gray-500">Gunakan tombol panah di samping untuk menambah/mengurangi nomor.</p>
+    <p class="mt-1 text-xs text-gray-500">Cukup ketikkan angka contoh : 1 maka di kwitansi akan muncul 0001.</p>
 </div>
 
                     <!-- 2. Telah diterima dari (Dropdown Sekolah) -->
@@ -342,14 +342,15 @@
                     </div>
 
                     <!-- 7. Nama Bendahara -->
-                    <div>
-                        <label for="treasurerName" class="block text-sm font-medium text-gray-700">6. Nama Bendahara</label>
-                        <select id="treasurerName" onchange="updateReceipt()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border bg-white">
-                            <option value="" disabled selected>Pilih Bendahara</option>
-                            <option value="NURUL BADRIYAH, S.Psi.">NURUL BADRIYAH, S.Psi.</option>
-                            <option value="SITI HATIRAH, S.Pd.">SITI HATIRAH, S.Pd.</option>
-                        </select>
-                    </div>
+<div>
+    <label for="treasurerName" class="block text-sm font-medium text-gray-700">6. Nama Bendahara</label>
+    <select id="treasurerName" onchange="updateReceipt()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border bg-white">
+        <option value="" disabled selected>-- Pilih Bendahara --</option>
+        
+        <option value="NURUL BADRIYAH, S.Psi.">NURUL BADRIYAH, S.Psi.</option>
+        <option value="SITI HATIRAH, S.Pd.">SITI HATIRAH, S.Pd.</option>
+    </select>
+</div>
 
                     <!-- Tombol Aksi -->
                     <div class="mt-6 space-y-3">
