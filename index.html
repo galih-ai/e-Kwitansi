@@ -737,138 +737,128 @@ else if (treasurerName === 'SITI HATIRAH, S.Pd.') {
         /**
          * Mengunduh Kwitansi sebagai PDF.
          */
-        function downloadPDF() {
-            const receipt = document.getElementById('receipt-preview');
-            const filename = `Kwitansi_MGBK_No_${String(parseInt(document.getElementById('receiptNumber').value, 10) || 1).padStart(4, '0')}_${document.getElementById('receivedFrom').value || 'Draft'}.pdf`;
-
-            // Proses rendering menggunakan html2canvas
-            html2canvas(receipt, { 
-                scale: 2,                 // ⬅️ cukup, lebih stabil
-                useCORS: true,
-                backgroundColor: "#ffffff",
-                windowWidth: receipt.offsetWidth,
-                windowHeight: receipt.offsetHeight
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                
-                // Inisialisasi jsPDF
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                const imgWidth = 180;
-                const pageHeight = 297;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-
-                let position = 15;
-
-                pdf.addImage(imgData, 'PNG', 15, position, imgWidth, imgHeight);
-                heightLeft -= (pageHeight - position);
-
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight + 15;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 15, position, imgWidth, imgHeight);
-                    heightLeft -= (pageHeight - 15);
-                }
-
-                pdf.save(filename);
-            }).catch(error => {
-                console.error("Gagal mengunduh PDF:", error);
-                console.error("Terjadi kesalahan saat membuat PDF. Cek konsol untuk detail.");
-            });
-        }
-        
-        // Panggil fungsi inisialisasi saat dokumen dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            updateReceipt();
-            handlePaymentTypeChange();
-        })
-
-        async function saveToDrive() {
+/**
+ * Mengunduh Kwitansi sebagai PDF.
+ */
+function downloadPDF() {
+    const btn = document.querySelector('button[onclick="downloadPDF()"]');
     const receipt = document.getElementById('receipt-preview');
+    const originalText = btn.innerHTML;
+    
+    // Siapkan nama file
+    const receiptNum = document.getElementById('receiptNumber').value || "1";
+    const schoolName = document.getElementById('receivedFrom').value || 'Draft';
+    const filename = `Kwitansi_No_${String(parseInt(receiptNum, 10)).padStart(4, "0")}_${schoolName}.pdf`;
+
+    // Aktifkan Indikator Loading
+    btn.innerText = "Sedang Memproses...";
+    btn.disabled = true;
+    btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+    html2canvas(receipt, { 
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        windowWidth: receipt.offsetWidth,
+        windowHeight: receipt.offsetHeight
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const imgWidth = 180;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 15, 15, imgWidth, imgHeight);
+
+        // Logika khusus Smartphone agar lancar di Android/iOS
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            const pdfBlob = pdf.output('blob');
+            const blobURL = URL.createObjectURL(pdfBlob);
+            window.open(blobURL, '_blank');
+        } else {
+            pdf.save(filename);
+        }
+
+    }).catch(error => {
+        console.error("Gagal:", error);
+        alert("Terjadi kesalahan saat membuat PDF.");
+    }).finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-70', 'cursor-not-allowed');
+    });
+}
+
+// Panggil fungsi inisialisasi saat dokumen dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    updateReceipt();
+    handlePaymentTypeChange();
+});
+
+async function saveToDrive() {
+    const btn = document.querySelector('button[onclick="saveToDrive()"]');
+    const receipt = document.getElementById('receipt-preview');
+    const originalText = btn.innerHTML;
 
     if (!receipt || receipt.innerHTML.trim() === '') {
         alert('Preview kwitansi belum siap');
         return;
     }
 
-    const no = String(
-        parseInt(document.getElementById('receiptNumber').value || 1)
-    ).padStart(4, '0');
+    btn.innerText = "Sedang Memproses...";
+    btn.disabled = true;
+    btn.classList.add('opacity-70', 'cursor-not-allowed');
 
-    const sekolah = document.getElementById('receivedFrom').value || 'Draft';
+    try {
+        const no = String(parseInt(document.getElementById('receiptNumber').value || 1)).padStart(4, '0');
+        const sekolah = document.getElementById('receivedFrom').value || 'Draft';
+        const paymentType = document.getElementById('paymentType').value;
+        const manualText = document.getElementById('manualPaymentText').value;
 
-    const paymentType = document.getElementById('paymentType').value;
-    const manualText = document.getElementById('manualPaymentText').value;
+        let prefix = 'Kwitansi';
+        if (paymentType === 'Iuran MGBK SMP') {
+            prefix = 'Kwitansi_Iuran MGBK';
+        } else if (paymentType === 'Pembayaran Dana Konsumsi Pertemuan MGBK') {
+            prefix = 'Kwitansi_Pembayaran Dana Konsumsi Pertemuan MGBK';
+        } else if (paymentType === 'Lainnya' && manualText.trim() !== '') {
+            prefix = `Kwitansi_${manualText.trim()}`;
+        }
 
-    let prefix = 'Kwitansi';
+        const filename = `${prefix}_No ${no}_${sekolah}.pdf`;
 
-    if (paymentType === 'Iuran MGBK SMP') {
-        prefix = 'Kwitansi_Iuran MGBK';
-    } else if (paymentType === 'Pembayaran Dana Konsumsi Pertemuan MGBK') {
-        prefix = 'Kwitansi_Pembayaran Dana Konsumsi Pertemuan MGBK';
-    } else if (paymentType === 'Lainnya' && manualText.trim() !== '') {
-        prefix = `Kwitansi_${manualText.trim()}`;
-    }
+        const canvas = await html2canvas(receipt, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+        });
 
-    const filename = `${prefix}_No ${no}_${sekolah}.pdf`;
+        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 15, 15, 180, canvas.height * 180 / canvas.width);
 
-    const canvas = await html2canvas(receipt, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff"
-    });
+        const pdfBlob = pdf.output('blob');
+        const reader = new FileReader();
+        reader.readAsDataURL(pdfBlob);
 
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgData = canvas.toDataURL('image/png');
-
-    pdf.addImage(
-        imgData,
-        'PNG',
-        15,
-        15,
-        180,
-        canvas.height * 180 / canvas.width
-    );
-
-    const pdfBlob = pdf.output('blob');
-const reader = new FileReader();
-    reader.readAsDataURL(pdfBlob);
-reader.onloadend = async function() {
-        const base64data = reader.result.split(',')[1];
-
-        // 1. Definisikan pemformatan data terlebih dahulu
-        const noRaw = parseInt(document.getElementById('receiptNumber').value || 1);
-        const noFormatted = String(noRaw).padStart(4, '0'); // Mengubah 1 menjadi 0001 
-
-        const amountRaw = parseInt(document.getElementById('amount').value, 10) || 0;
-        const amountFormatted = formatRupiah(amountRaw); // Mengubah 100000 menjadi Rp 100.000,00- 
-
-        // 2. Masukkan variabel yang sudah diformat ke dalam payload
-        const payload = {
-            action: 'uploadDrive',
-            filename: filename,
-            mimeType: "application/pdf",
-            data: base64data,
-            noKwitansi: noFormatted,      // Menggunakan hasil format 0001
-            sekolah: document.getElementById('receivedFrom').value,
-            nominal: amountFormatted,     // Menggunakan hasil format Rp...
-            untuk: document.getElementById('paymentType').value === 'Lainnya' ? 
-                   document.getElementById('manualPaymentText').value : 
-                   document.getElementById('paymentType').value,
-            tglBayar: formatDate(document.getElementById('paymentDate').value), // Menggunakan format tanggal Indonesia
-            bendahara: document.getElementById('treasurerName').value
-        };
-
-        try {
-            const btn = document.querySelector('button[onclick="saveToDrive()"]');
-            const originalText = btn.innerText;
-            btn.innerText = "Sedang Menyimpan...";
-            btn.disabled = true;
+        reader.onloadend = async function() {
+            const base64data = reader.result.split(',')[1];
+            
+            const payload = {
+                action: 'uploadDrive',
+                filename: filename,
+                mimeType: "application/pdf",
+                data: base64data,
+                noKwitansi: no,
+                sekolah: sekolah,
+                nominal: formatRupiah(parseInt(document.getElementById('amount').value, 10) || 0),
+                untuk: paymentType === 'Lainnya' ? manualText : paymentType,
+                tglBayar: formatDate(document.getElementById('paymentDate').value),
+                bendahara: document.getElementById('treasurerName').value
+            };
 
             await fetch(UPLOAD_URL, {
                 method: 'POST',
@@ -877,18 +867,18 @@ reader.onloadend = async function() {
 
             alert('✅ Kwitansi berhasil disimpan ke Drive & Rekap tercatat di Sheets');
             
-            btn.innerText = originalText;
+            btn.innerHTML = originalText;
             btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-not-allowed');
+        };
 
-        } catch (err) {
-            console.error(err);
-            alert('❌ Gagal menyimpan. Periksa koneksi atau UPLOAD_URL.');
-            const btn = document.querySelector('button[onclick="saveToDrive()"]');
-            btn.innerText = "Save to Drive";
-            btn.disabled = false;
-        }
-    };
-    // --- SAMPAI SINI ---
+    } catch (err) {
+        console.error(err);
+        alert('❌ Gagal menyimpan. Periksa koneksi.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-70', 'cursor-not-allowed');
+    }
 }
 
     </script>
